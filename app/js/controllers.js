@@ -33,4 +33,31 @@ angular.module('myApp.controllers', [])
       party.notified = 'Yes';
       $scope.parties.$save(party.$id);
     };
+  }])
+  .controller('AuthController', ['$scope', '$firebaseSimpleLogin', '$location', function($scope, $firebaseSimpleLogin, $location) {
+    var authRef = new Firebase('https://waitandeat-diego.firebaseio.com/');
+    var auth = $firebaseSimpleLogin(authRef);
+
+    $scope.user = {email: '', password: ''};
+
+    $scope.register = function() {
+      auth.$createUser($scope.user.email, $scope.user.password).then(function(data) {
+        console.log(data);
+        $scope.login();
+      });
+    };
+
+    $scope.login = function() {
+      auth.$login('password', $scope.user).then(function(data) {
+        console.log(data);
+        // Redirect users to /waitlist
+        $location.path('/waitlist');
+      });
+    };
+
+    $scope.logout = function() {
+      auth.$logout();
+      // Redirect users to /
+      $location.path('/');
+    };
   }]);
