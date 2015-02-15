@@ -1,0 +1,23 @@
+// Firebase Security Rules
+{
+  "rules": {
+    "emails": {
+      "$emailId": {
+        ".read": "false", //no one can read individual emails
+        ".write": "auth != null" //only logged in users can write to individual emails
+      }
+    },
+    "textMessages": {
+      "$textMessageId": {
+        ".read": "false",
+        ".write": "auth != null"
+      }
+    },
+    "users": {
+      "$userId": {
+        ".read": "auth != null && auth.id == $userId", //only logged in users can read their own data
+        ".write": "auth != null && auth.id == $userId" //only logged in users can write to their own data
+      }
+    }
+  }
+}
